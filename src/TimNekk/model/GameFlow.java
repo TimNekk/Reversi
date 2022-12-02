@@ -1,17 +1,25 @@
 package TimNekk.model;
 
+import TimNekk.model.ai.AdvancedBot;
+import TimNekk.model.ai.Bot;
+import TimNekk.model.ai.SimpleBot;
+
 public class GameFlow {
     private final Field field;
-    private final GameMode gameMode;
+    private GameMode gameMode;
     private Turn turn = Turn.WHITE;
     private Bot bot;
 
-    public GameFlow(Field field, GameMode gameMode) {
+    public GameFlow(Field field) {
         this.field = field;
+    }
+
+    public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
 
-        if (gameMode == GameMode.PLAYER_VS_BOT) {
-            bot = new Bot(field);
+        switch (gameMode) {
+            case PLAYER_VS_SIMPLE_BOT -> bot = new SimpleBot(field);
+            case PLAYER_VS_ADVANCED_BOT -> bot = new AdvancedBot(field);
         }
     }
 
@@ -38,8 +46,7 @@ public class GameFlow {
     }
 
     public boolean isPlayerTurn() {
-        return gameMode == GameMode.PLAYER_VS_BOT && turn == Turn.WHITE ||
-                gameMode == GameMode.PLAYER_VS_PLAYER && turn == Turn.WHITE;
+        return gameMode == GameMode.PLAYER_VS_PLAYER || turn == Turn.WHITE;
     }
 
     public void makePlayerMove(Coordinates coordinates) throws NoMoreMovesException {
@@ -49,7 +56,6 @@ public class GameFlow {
 
     public void makeBotMove() throws NoMoreMovesException {
         Coordinates coordinates = bot.getMove(turn);
-        System.out.println("Bot move: " + coordinates);
         field.setCellState(coordinates, turn);
         nextTurn();
     }
