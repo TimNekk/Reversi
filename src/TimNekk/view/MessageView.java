@@ -27,11 +27,9 @@ public class MessageView {
             return;
         }
 
-        if (gameFlow.getTurn() == Turn.WHITE) {
-            System.out.println(config.whiteCell() + " Your turn");
-        } else {
-            System.out.println(config.blackCell() + " Bot turn");
-        }
+        String cell = config.getCellFromTurn(gameFlow.getTurn());
+        String subject = gameFlow.isPlayerTurn() ? "Your" : "Bot's";
+        System.out.println(cell + " " + subject + " turn");
     }
 
     public void printGameOverMessage() {
