@@ -2,23 +2,20 @@ package TimNekk.controller;
 
 import TimNekk.model.Coordinates;
 import TimNekk.model.GameFlow;
-import TimNekk.model.NoMoreMovesException;
-import TimNekk.view.ConsoleView;
+import TimNekk.model.exceptions.IllegalMoveException;
+import TimNekk.model.exceptions.NoMoreMovesException;
 
 import java.util.Scanner;
 
-public class ConsoleController {
-    private final ConsoleView view;
+public class MovesController extends Controller {
     private final GameFlow gameFlow;
-    private final Scanner scanner;
 
-    public ConsoleController(ConsoleView view, GameFlow gameFlow) {
-        this.view = view;
+    public MovesController(Scanner scanner, GameFlow gameFlow) {
+        super(scanner);
         this.gameFlow = gameFlow;
-        scanner = new Scanner(System.in);
     }
 
-    public void makeMove() throws NoMoreMovesException {
+    public void makeMove() throws NoMoreMovesException, IllegalMoveException {
         if (gameFlow.isPlayerTurn()) {
             Coordinates coordinates = getPlayerMove();
             gameFlow.makePlayerMove(coordinates);
@@ -26,8 +23,6 @@ public class ConsoleController {
             waitForEnter();
             gameFlow.makeBotMove();
         }
-
-        view.update();
     }
 
     private void waitForEnter() {
