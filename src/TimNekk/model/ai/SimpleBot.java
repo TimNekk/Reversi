@@ -31,30 +31,4 @@ public class SimpleBot extends Bot {
 
         return bestMove;
     }
-
-    private float GetMoveRating(Coordinates coordinates, Turn turn) {
-        float rating = GetPlacedCellRating(coordinates);
-
-        Set<Coordinates> surrenderedCoordinatesSet = field.getSurrenderedCellsCoordinates(coordinates, turn);
-
-        for (Coordinates surrenderedCoordinates : surrenderedCoordinatesSet) {
-            rating += GetSurrenderedCellRating(surrenderedCoordinates);
-        }
-        
-        return rating;
-    }
-
-    private int GetSurrenderedCellRating(Coordinates surrenderedCoordinates) {
-        return field.isEdgeCell(surrenderedCoordinates) ? 2 : 1;
-    }
-    
-    private float GetPlacedCellRating(Coordinates coordinates) {
-        if (field.isCornerCell(coordinates)) {
-            return 0.8f;
-        }
-        if (field.isEdgeCell(coordinates)) {
-            return 0.4f;
-        }
-        return 0;
-    }
 }
