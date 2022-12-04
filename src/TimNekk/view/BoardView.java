@@ -1,18 +1,31 @@
 package TimNekk.view;
 
 import TimNekk.model.*;
+import TimNekk.model.enums.CellState;
 
+/**
+ * View for representing the game field.
+ */
 public class BoardView {
     private final GameFlow gameFlow;
     private final Field field;
     private final ViewConfig config;
 
+    /**
+     * Creates a new board view.
+     *
+     * @param gameFlow game flow.
+     * @param config view config.
+     */
     public BoardView(ViewConfig config, GameFlow gameFlow) {
         this.gameFlow = gameFlow;
         this.field = gameFlow.getField();
         this.config = config;
     }
 
+    /**
+     * Prints the field.
+     */
     public void printField() {
         System.out.print("\t0\t1\t2\t3\t4\t5\t6\t7\n");
 
@@ -29,6 +42,11 @@ public class BoardView {
         }
     }
 
+    /**
+     * Prints the cell.
+     *
+     * @param coordinates the coordinates of the cell.
+     */
     private void printCell(Coordinates coordinates) {
         if (gameFlow.isPlayerTurn() && field.isCellAvailable(coordinates, gameFlow.getTurn())) {
             System.out.print(config.availableCell());
