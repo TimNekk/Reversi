@@ -36,6 +36,23 @@ public final class Application {
     }
 
     /**
+     * Runs the application.
+     */
+    public void run() {
+        showMenu();
+        MenuItem menuItem = menuController.handlerMenuInput();
+
+        if (menuItem == MenuItem.PRINT_HIGHEST_PLAYER_SCORE) {
+            messageView.printHighestPlayerScore();
+        } else if (menuItem == MenuItem.EXIT) {
+            throw new IllegalStateException("Exit");
+        } else {
+            startGame();
+            endGame();
+        }
+    }
+
+    /**
      * Initializes the models.
      */
     private void initializeModels() {
@@ -63,23 +80,6 @@ public final class Application {
         Scanner scanner = new Scanner(System.in);
         movesController = new MovesController(scanner, gameFlow);
         menuController = new MenuController(scanner, gameFlow);
-    }
-
-    /**
-     * Runs the application.
-     */
-    public void run() {
-        showMenu();
-        MenuItem menuItem = menuController.handlerMenuInput();
-
-        if (menuItem == MenuItem.PRINT_HIGHEST_PLAYER_SCORE) {
-            messageView.printHighestPlayerScore();
-        } else if (menuItem == MenuItem.EXIT) {
-            throw new IllegalStateException("Exit");
-        } else {
-            startGame();
-            endGame();
-        }
     }
 
     /**

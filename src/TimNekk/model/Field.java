@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Field class represents the game field.
  */
-public class Field {
+public final class Field {
     private final int width = 8;
     private final int height = 8;
     private final CellState[][] cellsStates = new CellState[width][height];
@@ -22,27 +22,6 @@ public class Field {
      */
     public Field() {
         reset();
-    }
-
-    /**
-     * Fill the field with empty cells.
-     */
-    private void buildEmptyField() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                cellsStates[y][x] = CellState.EMPTY;
-            }
-        }
-    }
-
-    /**
-     * Fill the field with the initial state.
-     */
-    private void initializeStartingPositions() throws IndexOutOfBoundsException {
-        cellsStates[3][3] = CellState.WHITE;
-        cellsStates[4][4] = CellState.WHITE;
-        cellsStates[3][4] = CellState.BLACK;
-        cellsStates[4][3] = CellState.BLACK;
     }
 
     /**
@@ -88,33 +67,6 @@ public class Field {
         Set<Coordinates> surrenderedCellsCoordinates = getSurrenderedCellsCoordinates(coordinates, turn);
         for (Coordinates surrenderedCellCoordinates : surrenderedCellsCoordinates) {
             cellsStates[surrenderedCellCoordinates.y()][surrenderedCellCoordinates.x()] = CellState.fromTurn(turn);
-        }
-    }
-
-    /**
-     * Saves the previous state of the field.
-     */
-    private void savePreviousState() {
-        for (int y = 0; y < height; y++) {
-            System.arraycopy(cellsStates[y], 0, previousCellsStates[y], 0, width);
-        }
-    }
-
-    /**
-     * Checks if the cell is available. If the cell is not available, throws an exception.
-     *
-     * @param coordinates the coordinates of the cell.
-     * @param turn        current turn.
-     */
-    private void checkIfCellIsAvailable(Coordinates coordinates, Turn turn) throws IllegalMoveException {
-        boolean isCellAvailable;
-        try {
-            isCellAvailable = isCellAvailable(coordinates, turn);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalMoveException("Cell is out of bounds", e);
-        }
-        if (!isCellAvailable) {
-            throw new IllegalMoveException("Cell is not available for this turn");
         }
     }
 
@@ -165,29 +117,10 @@ public class Field {
     }
 
     /**
-     * Checks if there is at least one cell that can be switched to the current turn.
-     *
-     * @param turn current turn.
-     * @return true if there is at available cell, false otherwise.
-     */
-    public boolean isAnyCellAvailable(Turn turn) {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Coordinates coordinates = new Coordinates(x, y);
-                if (isCellAvailable(coordinates, turn)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Gets all cells coordinates that will be switched to the current turn.
      *
      * @param coordinates the coordinates of the cell.
-     * @param turn current turn.
+     * @param turn        current turn.
      * @return surrendered cells coordinates.
      */
     public Set<Coordinates> getSurrenderedCellsCoordinates(Coordinates coordinates, Turn turn) {
@@ -198,47 +131,6 @@ public class Field {
         }
 
         return surrenderedCells;
-    }
-
-    /**
-     * Gets all cells coordinates that will be switched to the current turn in the specified direction.
-     *
-     * @param coordinates the coordinates of the cell.
-     * @param turn current turn.
-     * @param direction the direction.
-     * @return surrendered cells coordinates.
-     */
-    private Set<Coordinates> getSurrenderedCellsCoordinatesForDirection(Coordinates coordinates, Turn turn, Direction direction) {
-        Set<Coordinates> surrenderedCells = new HashSet<>();
-
-        Coordinates currentCoordinates = coordinates;
-        while (true) {
-            currentCoordinates = currentCoordinates.getCoordinatesInDirection(direction);
-            if (!isCoordinatesInField(currentCoordinates)) {
-                return new HashSet<>();
-            }
-
-            CellState currentCellState = getCellState(currentCoordinates);
-            if (currentCellState == CellState.EMPTY) {
-                return new HashSet<>();
-            }
-
-            if (CellState.fromTurn(turn) == currentCellState) {
-                return surrenderedCells;
-            }
-
-            surrenderedCells.add(currentCoordinates);
-        }
-    }
-
-    /**
-     * Checks if the coordinates are in the field.
-     *
-     * @param coordinates the coordinates.
-     * @return true if the coordinates are in the field, false otherwise.
-     */
-    private boolean isCoordinatesInField(Coordinates coordinates) {
-        return coordinates.x() >= 0 && coordinates.x() < width && coordinates.y() >= 0 && coordinates.y() < height;
     }
 
     /**
@@ -288,5 +180,113 @@ public class Field {
     public void reset() {
         buildEmptyField();
         initializeStartingPositions();
+    }
+
+    /**
+     * Checks if there is at least one cell that can be switched to the current turn.
+     *
+     * @param turn current turn.
+     * @return true if there is at available cell, false otherwise.
+     */
+    public boolean isAnyCellAvailable(Turn turn) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Coordinates coordinates = new Coordinates(x, y);
+                if (isCellAvailable(coordinates, turn)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Fill the field with empty cells.
+     */
+    private void buildEmptyField() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                cellsStates[y][x] = CellState.EMPTY;
+            }
+        }
+    }
+
+    /**
+     * Fill the field with the initial state.
+     */
+    private void initializeStartingPositions() throws IndexOutOfBoundsException {
+        cellsStates[3][3] = CellState.WHITE;
+        cellsStates[4][4] = CellState.WHITE;
+        cellsStates[3][4] = CellState.BLACK;
+        cellsStates[4][3] = CellState.BLACK;
+    }
+
+    /**
+     * Gets all cells coordinates that will be switched to the current turn in the specified direction.
+     *
+     * @param coordinates the coordinates of the cell.
+     * @param turn        current turn.
+     * @param direction   the direction.
+     * @return surrendered cells coordinates.
+     */
+    private Set<Coordinates> getSurrenderedCellsCoordinatesForDirection(Coordinates coordinates, Turn turn, Direction direction) {
+        Set<Coordinates> surrenderedCells = new HashSet<>();
+
+        Coordinates currentCoordinates = coordinates;
+        while (true) {
+            currentCoordinates = currentCoordinates.getCoordinatesInDirection(direction);
+            if (!isCoordinatesInField(currentCoordinates)) {
+                return new HashSet<>();
+            }
+
+            CellState currentCellState = getCellState(currentCoordinates);
+            if (currentCellState == CellState.EMPTY) {
+                return new HashSet<>();
+            }
+
+            if (CellState.fromTurn(turn) == currentCellState) {
+                return surrenderedCells;
+            }
+
+            surrenderedCells.add(currentCoordinates);
+        }
+    }
+
+    /**
+     * Checks if the coordinates are in the field.
+     *
+     * @param coordinates the coordinates.
+     * @return true if the coordinates are in the field, false otherwise.
+     */
+    private boolean isCoordinatesInField(Coordinates coordinates) {
+        return coordinates.x() >= 0 && coordinates.x() < width && coordinates.y() >= 0 && coordinates.y() < height;
+    }
+
+    /**
+     * Saves the previous state of the field.
+     */
+    private void savePreviousState() {
+        for (int y = 0; y < height; y++) {
+            System.arraycopy(cellsStates[y], 0, previousCellsStates[y], 0, width);
+        }
+    }
+
+    /**
+     * Checks if the cell is available. If the cell is not available, throws an exception.
+     *
+     * @param coordinates the coordinates of the cell.
+     * @param turn        current turn.
+     */
+    private void checkIfCellIsAvailable(Coordinates coordinates, Turn turn) throws IllegalMoveException {
+        boolean isCellAvailable;
+        try {
+            isCellAvailable = isCellAvailable(coordinates, turn);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalMoveException("Cell is out of bounds", e);
+        }
+        if (!isCellAvailable) {
+            throw new IllegalMoveException("Cell is not available for this turn");
+        }
     }
 }

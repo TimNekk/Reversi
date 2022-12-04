@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * Controller for menu actions
  */
-public class MenuController extends Controller {
+public final class MenuController extends Controller {
     private final GameFlow gameFlow;
 
     /**

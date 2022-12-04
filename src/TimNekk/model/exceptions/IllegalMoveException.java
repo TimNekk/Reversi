@@ -3,7 +3,7 @@ package TimNekk.model.exceptions;
 /**
  * Illegal move exception.
  */
-public class IllegalMoveException extends Exception {
+public final class IllegalMoveException extends Exception {
     public IllegalMoveException(String message) {
         super(message);
     }

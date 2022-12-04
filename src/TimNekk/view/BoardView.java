@@ -1,12 +1,14 @@
 package TimNekk.view;
 
-import TimNekk.model.*;
+import TimNekk.model.Coordinates;
+import TimNekk.model.Field;
+import TimNekk.model.GameFlow;
 import TimNekk.model.enums.CellState;
 
 /**
  * View for representing the game field.
  */
-public class BoardView {
+public final class BoardView {
     private final GameFlow gameFlow;
     private final Field field;
     private final ViewConfig config;
@@ -15,7 +17,7 @@ public class BoardView {
      * Creates a new board view.
      *
      * @param gameFlow game flow.
-     * @param config view config.
+     * @param config   view config.
      */
     public BoardView(ViewConfig config, GameFlow gameFlow) {
         this.gameFlow = gameFlow;

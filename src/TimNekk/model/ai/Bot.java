@@ -33,7 +33,7 @@ public abstract class Bot {
      * Get move rating.
      *
      * @param coordinates coordinates of move.
-     * @param turn turn to make move.
+     * @param turn        turn to make move.
      * @return move rating.
      */
     protected float GetMoveRating(Coordinates coordinates, Turn turn) {

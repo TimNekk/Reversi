@@ -12,7 +12,7 @@ import TimNekk.model.exceptions.NoMoreMovesException;
 /**
  * GameFlow class represents the game flow.
  */
-public class GameFlow {
+public final class GameFlow {
     private final Field field;
     private GameMode gameMode;
     private final Turn defaultPlayerTurn = Turn.WHITE;
@@ -40,21 +40,6 @@ public class GameFlow {
         switch (gameMode) {
             case PLAYER_VS_SIMPLE_BOT -> bot = new SimpleBot(field);
             case PLAYER_VS_ADVANCED_BOT -> bot = new AdvancedBot(field);
-        }
-    }
-
-    /**
-     * Switches the turn.
-     *
-     * @throws NoMoreMovesException if there are no more moves.
-     */
-    private void nextTurn() throws NoMoreMovesException {
-        Turn nextTurn = turn == Turn.WHITE ? Turn.BLACK : Turn.WHITE;
-
-        if (field.isAnyCellAvailable(nextTurn)) {
-            turn = nextTurn;
-        } else if (!field.isAnyCellAvailable(turn)) {
-            throw new NoMoreMovesException("No available moves");
         }
     }
 
@@ -131,20 +116,6 @@ public class GameFlow {
     }
 
     /**
-     * Updates the player's max score.
-     */
-    private void updatePlayerMaxScore() {
-        if (gameMode == GameMode.PLAYER_VS_PLAYER) {
-            int whiteScore = field.getCellsCount(CellState.WHITE);
-            int blackScore = field.getCellsCount(CellState.BLACK);
-            playerMaxScore = Math.max(Math.max(whiteScore, blackScore), playerMaxScore);
-        } else {
-            int playerScore = field.getCellsCount(CellState.fromTurn(defaultPlayerTurn));
-            playerMaxScore = Math.max(playerScore, playerMaxScore);
-        }
-    }
-
-    /**
      * Gets the player's max score.
      *
      * @return the player's max score.
@@ -158,7 +129,35 @@ public class GameFlow {
      */
     public void undoPlayersMove() {
         field.undo();
-
         turn = defaultPlayerTurn;
+    }
+
+    /**
+     * Switches the turn.
+     *
+     * @throws NoMoreMovesException if there are no more moves.
+     */
+    private void nextTurn() throws NoMoreMovesException {
+        Turn nextTurn = turn == Turn.WHITE ? Turn.BLACK : Turn.WHITE;
+
+        if (field.isAnyCellAvailable(nextTurn)) {
+            turn = nextTurn;
+        } else if (!field.isAnyCellAvailable(turn)) {
+            throw new NoMoreMovesException("No available moves");
+        }
+    }
+
+    /**
+     * Updates the player's max score.
+     */
+    private void updatePlayerMaxScore() {
+        if (gameMode == GameMode.PLAYER_VS_PLAYER) {
+            int whiteScore = field.getCellsCount(CellState.WHITE);
+            int blackScore = field.getCellsCount(CellState.BLACK);
+            playerMaxScore = Math.max(Math.max(whiteScore, blackScore), playerMaxScore);
+        } else {
+            int playerScore = field.getCellsCount(CellState.fromTurn(defaultPlayerTurn));
+            playerMaxScore = Math.max(playerScore, playerMaxScore);
+        }
     }
 }
