@@ -23,7 +23,7 @@ public class MessageView {
         GameMode gameMode = gameFlow.getGameMode();
 
         if (gameMode == GameMode.PLAYER_VS_PLAYER) {
-            System.out.println(gameFlow.getTurn() + " turn");
+            System.out.println(config.getCellFromTurn(gameFlow.getTurn()) + " turn");
             return;
         }
 
