@@ -17,8 +17,9 @@ public class MenuController extends Controller {
     public MenuItem handlerMenuInput() {
         MenuItem menuItem = getMenuItem();
 
-        if (menuItem != MenuItem.PRINT_HIGHEST_PLAYER_SCORE) {
+        try {
             gameFlow.setGameMode(GameMode.fromMenuItem(menuItem));
+        } catch (IllegalArgumentException ignored) {
         }
 
         return menuItem;
