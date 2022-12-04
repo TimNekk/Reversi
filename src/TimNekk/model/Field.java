@@ -1,7 +1,9 @@
 package TimNekk.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import TimNekk.model.exceptions.IllegalMoveException;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Field {
     private final int width = 8;
@@ -36,27 +38,33 @@ public class Field {
         return height;
     }
 
-    public CellState getCellState(Coordinates coordinates) {
+    public CellState getCellState(Coordinates coordinates) throws IndexOutOfBoundsException {
         return cellStates[coordinates.y()][coordinates.x()];
     }
 
-    public void setCellState(Coordinates coordinates, Turn turn) {
-        if (!isCellAvailable(coordinates, turn)) {
-            throw new IllegalArgumentException("Cell is not available");
+    public void setCellState(Coordinates coordinates, Turn turn) throws IllegalMoveException {
+        boolean isCellAvailable;
+        try {
+            isCellAvailable = isCellAvailable(coordinates, turn);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalMoveException("Cell is out of bounds", e);
+        }
+
+        if (!isCellAvailable) {
+            throw new IllegalMoveException("Cell is not available for this turn");
         }
 
         cellStates[coordinates.y()][coordinates.x()] = turn.toCellState();
 
-        for (Direction direction : Direction.values()) {
-            List<Coordinates> coordinatesList = getSurrenderedCellsCoordinates(coordinates, turn, direction);
-            for (Coordinates coordinates1 : coordinatesList) {
-                cellStates[coordinates1.y()][coordinates1.x()] = turn.toCellState();
-            }
+        Set<Coordinates> coordinatesSet = getSurrenderedCellsCoordinates(coordinates, turn);
+
+        for (Coordinates coordinates1 : coordinatesSet) {
+            cellStates[coordinates1.y()][coordinates1.x()] = turn.toCellState();
         }
     }
 
-    public List<Coordinates> getAvailableCellsCoordinates(Turn turn) {
-        List<Coordinates> availableCells = new ArrayList<>();
+    public Set<Coordinates> getAvailableCellsCoordinates(Turn turn) {
+        Set<Coordinates> availableCells = new HashSet<>();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -75,15 +83,8 @@ public class Field {
             return false;
         }
 
-        // iterate through all directions
-        for (Direction direction : Direction.values()) {
-            List<Coordinates> coordinatesList = getSurrenderedCellsCoordinates(coordinates, turn, direction);
-            if (coordinatesList.size() > 0) {
-                return true;
-            }
-        }
-
-        return false;
+        Set<Coordinates> coordinatesSet = getSurrenderedCellsCoordinates(coordinates, turn);
+        return !coordinatesSet.isEmpty();
     }
 
     public boolean isAnyCellAvailable(Turn turn) {
@@ -99,19 +100,30 @@ public class Field {
         return false;
     }
 
-    private List<Coordinates> getSurrenderedCellsCoordinates(Coordinates coordinates, Turn turn, Direction direction) {
-        List<Coordinates> surrenderedCells = new ArrayList<>();
+    public Set<Coordinates> getSurrenderedCellsCoordinates(Coordinates coordinates, Turn turn) {
+        Set<Coordinates> surrenderedCells = new HashSet<>();
+
+        for (Direction direction : Direction.values()) {
+            surrenderedCells.addAll(getSurrenderedCellsCoordinatesForDirection(coordinates, turn, direction));
+        }
+
+        return surrenderedCells;
+    }
+
+    private Set<Coordinates> getSurrenderedCellsCoordinatesForDirection(Coordinates coordinates,
+                                                                         Turn turn, Direction direction) {
+        Set<Coordinates> surrenderedCells = new HashSet<>();
 
         Coordinates currentCoordinates = coordinates;
         while (true) {
             currentCoordinates = currentCoordinates.getCoordinatesInDirection(direction);
             if (!isCoordinatesInField(currentCoordinates)) {
-                return new ArrayList<>();
+                return new HashSet<>();
             }
 
             CellState currentCellState = getCellState(currentCoordinates);
             if (currentCellState == CellState.EMPTY) {
-                return new ArrayList<>();
+                return new HashSet<>();
             }
 
             if (turn.toCellState() == currentCellState) {
@@ -139,5 +151,15 @@ public class Field {
         }
 
         return count;
+    }
+
+    public boolean isEdgeCell(Coordinates coordinates) {
+        return coordinates.x() == 0 || coordinates.x() == width - 1
+                || coordinates.y() == 0 || coordinates.y() == height - 1;
+    }
+
+    public boolean isCornerCell(Coordinates coordinates) {
+        return (coordinates.x() == 0 || coordinates.x() == width - 1)
+                && (coordinates.y() == 0 || coordinates.y() == height - 1);
     }
 }
