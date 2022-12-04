@@ -4,7 +4,8 @@ import TimNekk.controller.MenuController;
 import TimNekk.controller.MovesController;
 import TimNekk.model.Field;
 import TimNekk.model.GameFlow;
-import TimNekk.model.NoMoreMovesException;
+import TimNekk.model.exceptions.IllegalMoveException;
+import TimNekk.model.exceptions.NoMoreMovesException;
 import TimNekk.view.BoardView;
 import TimNekk.view.MessageView;
 import TimNekk.view.ViewConfig;
@@ -65,14 +66,27 @@ public final class Application {
             messageView.printTurnInfo();
             messageView.printMovePrompt();
             try {
-                movesController.makeMove();
+                makeMove();
             } catch (NoMoreMovesException e) {
                 return;
             }
         }
     }
 
+    private void makeMove() throws NoMoreMovesException {
+        while (true) {
+            try {
+                movesController.makeMove();
+                break;
+            } catch (IllegalMoveException e) {
+                messageView.printIllegalMove();
+                messageView.printMovePrompt();
+            }
+        }
+    }
+
     private void endGame() {
+        boardView.printField();
         messageView.printFinalScore();
         messageView.printGameOverMessage();
     }

@@ -2,7 +2,8 @@ package TimNekk.controller;
 
 import TimNekk.model.Coordinates;
 import TimNekk.model.GameFlow;
-import TimNekk.model.NoMoreMovesException;
+import TimNekk.model.exceptions.IllegalMoveException;
+import TimNekk.model.exceptions.NoMoreMovesException;
 
 import java.util.Scanner;
 
@@ -14,7 +15,7 @@ public class MovesController extends Controller {
         this.gameFlow = gameFlow;
     }
 
-    public void makeMove() throws NoMoreMovesException {
+    public void makeMove() throws NoMoreMovesException, IllegalMoveException {
         if (gameFlow.isPlayerTurn()) {
             Coordinates coordinates = getPlayerMove();
             gameFlow.makePlayerMove(coordinates);
