@@ -8,4 +8,11 @@ public abstract class Controller {
     public Controller(Scanner scanner) {
         this.scanner = scanner;
     }
+
+    protected int readInteger() {
+        while (!scanner.hasNextInt()) {
+            scanner.next();
+        }
+        return scanner.nextInt();
+    }
 }
