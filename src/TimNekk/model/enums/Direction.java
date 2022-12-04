@@ -1,5 +1,8 @@
-package TimNekk.model;
+package TimNekk.model.enums;
 
+/**
+ * Direction of a move.
+ */
 public enum Direction {
     UP(-1, 0),
     DOWN(1, 0),
@@ -13,15 +16,31 @@ public enum Direction {
     private final int dx;
     private final int dy;
 
+    /**
+     * Constructor.
+     *
+     * @param dx change in x
+     * @param dy change in y
+     */
     Direction(int dx, int dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
+    /**
+     * Get change in x.
+     *
+     * @return change in x
+     */
     public int getDx() {
         return dx;
     }
 
+    /**
+     * Get change in y.
+     *
+     * @return change in y
+     */
     public int getDy() {
         return dy;
     }
