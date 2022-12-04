@@ -60,4 +60,8 @@ public class MessageView {
     public void printMenuPrompt() {
         System.out.print("Insert number: ");
     }
+
+    public void printIllegalMove() {
+        System.out.println("Illegal move!");
+    }
 }
