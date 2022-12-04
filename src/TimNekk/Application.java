@@ -4,6 +4,7 @@ import TimNekk.controller.MenuController;
 import TimNekk.controller.MovesController;
 import TimNekk.model.Field;
 import TimNekk.model.GameFlow;
+import TimNekk.model.MenuItem;
 import TimNekk.model.exceptions.IllegalMoveException;
 import TimNekk.model.exceptions.NoMoreMovesException;
 import TimNekk.view.BoardView;
@@ -50,14 +51,19 @@ public final class Application {
 
     public void run() {
         showMenu();
-        startGame();
-        endGame();
+        MenuItem menuItem = menuController.handlerMenuInput();
+
+        if (menuItem == MenuItem.PRINT_HIGHEST_PLAYER_SCORE) {
+            messageView.printHighestPlayerScore();
+        } else {
+            startGame();
+            endGame();
+        }
     }
 
     private void showMenu() {
         messageView.printMenu();
         messageView.printMenuPrompt();
-        menuController.selectGameMode();
     }
 
     private void startGame() {
@@ -89,5 +95,6 @@ public final class Application {
         boardView.printField();
         messageView.printFinalScore();
         messageView.printGameOverMessage();
+        gameFlow.endGame();
     }
 }
