@@ -55,6 +55,8 @@ public final class Application {
 
         if (menuItem == MenuItem.PRINT_HIGHEST_PLAYER_SCORE) {
             messageView.printHighestPlayerScore();
+        } else if (menuItem == MenuItem.EXIT) {
+            throw new IllegalStateException("Exit");
         } else {
             startGame();
             endGame();

@@ -5,7 +5,11 @@ public class Main {
         Application application = new Application();
 
         while (true) {
-            application.run();
+            try {
+                application.run();
+            } catch (IllegalStateException e) {
+                break;
+            }
         }
     }
 }
