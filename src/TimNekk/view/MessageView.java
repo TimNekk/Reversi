@@ -14,9 +14,9 @@ public class MessageView {
     }
 
     public void printMenu() {
-        System.out.println("1. Player VS Bot");
-        System.out.println("2. Player VS Advanced Bot");
-        System.out.println("3. Player VS Player");
+        for (MenuItem item : MenuItem.values()) {
+            System.out.println(item.getNumber() + ". " + item.getName());
+        }
     }
 
     public void printTurnInfo() {
@@ -33,7 +33,7 @@ public class MessageView {
     }
 
     public void printGameOverMessage() {
-        System.out.println("\nGame over");
+        System.out.println("Game over");
     }
 
     public void printFinalScore() {
@@ -63,5 +63,9 @@ public class MessageView {
 
     public void printIllegalMove() {
         System.out.println("Illegal move!");
+    }
+
+    public void printHighestPlayerScore() {
+        System.out.println("Highest player score: " + gameFlow.getPlayerMaxScore());
     }
 }
