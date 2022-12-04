@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Advanced bot that predicts the next move of the player and tries to counter it.
  */
-public class AdvancedBot extends Bot {
+public final class AdvancedBot extends Bot {
     /**
      * Creates a new advanced bot.
      *
@@ -45,7 +45,7 @@ public class AdvancedBot extends Bot {
      * Gets the rating of the move.
      *
      * @param coordinates the coordinates of the move.
-     * @param turn the turn of the move.
+     * @param turn        the turn of the move.
      * @return the rating of the move.
      */
     private float getNextMaxRating(Coordinates coordinates, Turn turn) {

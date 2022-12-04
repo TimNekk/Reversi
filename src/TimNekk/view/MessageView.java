@@ -1,6 +1,7 @@
 package TimNekk.view;
 
-import TimNekk.model.*;
+import TimNekk.model.Field;
+import TimNekk.model.GameFlow;
 import TimNekk.model.enums.CellState;
 import TimNekk.model.enums.GameMode;
 import TimNekk.model.enums.MenuItem;
@@ -8,7 +9,7 @@ import TimNekk.model.enums.MenuItem;
 /**
  * View that represents the messages.
  */
-public class MessageView {
+public final class MessageView {
     private final GameFlow gameFlow;
     private final Field field;
     private final ViewConfig config;
@@ -16,7 +17,7 @@ public class MessageView {
     /**
      * Creates a new message view.
      *
-     * @param config view config.
+     * @param config   view config.
      * @param gameFlow game flow.
      */
     public MessageView(ViewConfig config, GameFlow gameFlow) {

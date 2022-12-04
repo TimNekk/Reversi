@@ -17,7 +17,7 @@ public enum MenuItem {
      * Creates a new menu item.
      *
      * @param number the number of the menu item
-     * @param name the name of the menu item
+     * @param name   the name of the menu item
      */
     MenuItem(int number, String name) {
         this.number = number;
@@ -47,7 +47,6 @@ public enum MenuItem {
      *
      * @param number the number of the menu item
      * @return the menu item
-     *
      * @throws IllegalArgumentException if the number is not a menu item
      */
     public static MenuItem fromNumber(int number) {

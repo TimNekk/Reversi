@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Simple bot implementation.
  */
-public class SimpleBot extends Bot {
+public final class SimpleBot extends Bot {
     /**
      * Creates a new simple bot.
      *

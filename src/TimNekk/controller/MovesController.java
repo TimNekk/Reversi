@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Controller for handling moves
  */
-public class MovesController extends Controller {
+public final class MovesController extends Controller {
     private final GameFlow gameFlow;
 
     /**
