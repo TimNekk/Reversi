@@ -8,26 +8,26 @@ import java.util.Set;
 public class Field {
     private final int width = 8;
     private final int height = 8;
-    private final CellState[][] cellStates = new CellState[width][height];
+    private CellState[][] cellsStates = new CellState[width][height];
+    private final CellState[][] previousCellsStates = new CellState[width][height];
 
-    public Field() throws IndexOutOfBoundsException {
-        buildEmptyField();
-        initializeStartingPositions();
+    public Field() {
+        reset();
     }
 
     private void buildEmptyField() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                cellStates[y][x] = CellState.EMPTY;
+                cellsStates[y][x] = CellState.EMPTY;
             }
         }
     }
 
     private void initializeStartingPositions() throws IndexOutOfBoundsException {
-        cellStates[3][3] = CellState.WHITE;
-        cellStates[4][4] = CellState.WHITE;
-        cellStates[3][4] = CellState.BLACK;
-        cellStates[4][3] = CellState.BLACK;
+        cellsStates[3][3] = CellState.WHITE;
+        cellsStates[4][4] = CellState.WHITE;
+        cellsStates[3][4] = CellState.BLACK;
+        cellsStates[4][3] = CellState.BLACK;
     }
 
     public int getWidth() {
@@ -39,28 +39,41 @@ public class Field {
     }
 
     public CellState getCellState(Coordinates coordinates) throws IndexOutOfBoundsException {
-        return cellStates[coordinates.y()][coordinates.x()];
+        return cellsStates[coordinates.y()][coordinates.x()];
     }
 
     public void setCellState(Coordinates coordinates, Turn turn) throws IllegalMoveException {
+        checkIfCellIsAvailable(coordinates, turn);
+
+        savePreviousState();
+
+        cellsStates[coordinates.y()][coordinates.x()] = turn.toCellState();
+        Set<Coordinates> surrenderedCellsCoordinates = getSurrenderedCellsCoordinates(coordinates, turn);
+        for (Coordinates surrenderedCellCoordinates : surrenderedCellsCoordinates) {
+            cellsStates[surrenderedCellCoordinates.y()][surrenderedCellCoordinates.x()] = turn.toCellState();
+        }
+    }
+
+    private void savePreviousState() {
+        for (int y = 0; y < height; y++) {
+            System.arraycopy(cellsStates[y], 0, previousCellsStates[y], 0, width);
+        }
+    }
+
+    private void checkIfCellIsAvailable(Coordinates coordinates, Turn turn) throws IllegalMoveException {
         boolean isCellAvailable;
         try {
             isCellAvailable = isCellAvailable(coordinates, turn);
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalMoveException("Cell is out of bounds", e);
         }
-
         if (!isCellAvailable) {
             throw new IllegalMoveException("Cell is not available for this turn");
         }
+    }
 
-        cellStates[coordinates.y()][coordinates.x()] = turn.toCellState();
-
-        Set<Coordinates> coordinatesSet = getSurrenderedCellsCoordinates(coordinates, turn);
-
-        for (Coordinates coordinates1 : coordinatesSet) {
-            cellStates[coordinates1.y()][coordinates1.x()] = turn.toCellState();
-        }
+    protected void undo() {
+        cellsStates = previousCellsStates;
     }
 
     public Set<Coordinates> getAvailableCellsCoordinates(Turn turn) {
@@ -111,7 +124,7 @@ public class Field {
     }
 
     private Set<Coordinates> getSurrenderedCellsCoordinatesForDirection(Coordinates coordinates,
-                                                                         Turn turn, Direction direction) {
+                                                                        Turn turn, Direction direction) {
         Set<Coordinates> surrenderedCells = new HashSet<>();
 
         Coordinates currentCoordinates = coordinates;
@@ -144,7 +157,7 @@ public class Field {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (cellStates[y][x] == cellState) {
+                if (cellsStates[y][x] == cellState) {
                     count++;
                 }
             }
