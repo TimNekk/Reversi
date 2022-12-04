@@ -53,7 +53,7 @@ public class MessageView {
         if (gameFlow.isPlayerTurn()) {
             System.out.print("Insert coordinates: ");
         } else {
-            System.out.print("Press ENTER to continue..");
+            System.out.print("Press ENTER to continue or U to undo: ");
         }
     }
 

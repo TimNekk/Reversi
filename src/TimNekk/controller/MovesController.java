@@ -20,14 +20,18 @@ public class MovesController extends Controller {
             Coordinates coordinates = getPlayerMove();
             gameFlow.makePlayerMove(coordinates);
         } else {
-            waitForEnter();
-            gameFlow.makeBotMove();
+            if (isUndoInInput()) {
+                gameFlow.undoPlayersMove();
+            } else {
+                gameFlow.makeBotMove();
+            }
         }
     }
 
-    private void waitForEnter() {
+    private boolean isUndoInInput() {
         scanner.nextLine();
-        scanner.nextLine();
+        String input = scanner.nextLine();
+        return input.equalsIgnoreCase("u");
     }
 
     private Coordinates getPlayerMove() {

@@ -84,4 +84,10 @@ public class GameFlow {
     public int getPlayerMaxScore() {
         return playerMaxScore;
     }
+
+    public void undoPlayersMove() {
+        field.undo();
+
+        turn = defaultPlayerTurn;
+    }
 }
