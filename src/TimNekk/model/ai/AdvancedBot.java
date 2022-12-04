@@ -2,17 +2,27 @@ package TimNekk.model.ai;
 
 import TimNekk.model.Coordinates;
 import TimNekk.model.Field;
-import TimNekk.model.Turn;
+import TimNekk.model.enums.Turn;
 import TimNekk.model.exceptions.IllegalMoveException;
 
 import java.util.Set;
 
+/**
+ * Advanced bot that predicts the next move of the player and tries to counter it.
+ */
 public class AdvancedBot extends Bot {
-
+    /**
+     * Creates a new advanced bot.
+     *
+     * @param field the field to play on.
+     */
     public AdvancedBot(Field field) {
         super(field);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Coordinates getMove(Turn turn) {
         float maxRating = -Float.MAX_VALUE;
@@ -31,9 +41,16 @@ public class AdvancedBot extends Bot {
         return bestMove;
     }
 
-    private float getNextMaxRating(Coordinates coordinate, Turn turn) {
+    /**
+     * Gets the rating of the move.
+     *
+     * @param coordinates the coordinates of the move.
+     * @param turn the turn of the move.
+     * @return the rating of the move.
+     */
+    private float getNextMaxRating(Coordinates coordinates, Turn turn) {
         try {
-            field.setCellState(coordinate, turn);
+            field.setCellState(coordinates, turn);
         } catch (IllegalMoveException ignored) {
         }
 
