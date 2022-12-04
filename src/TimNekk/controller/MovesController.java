@@ -31,8 +31,8 @@ public class MovesController extends Controller {
     }
 
     private Coordinates getPlayerMove() {
-        int x = scanner.nextInt();
-        int y = scanner.nextInt();
+        int x = readInteger();
+        int y = readInteger();
 
         return new Coordinates(x, y);
     }

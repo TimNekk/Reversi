@@ -162,4 +162,9 @@ public class Field {
         return (coordinates.x() == 0 || coordinates.x() == width - 1)
                 && (coordinates.y() == 0 || coordinates.y() == height - 1);
     }
+
+    public void reset() {
+        buildEmptyField();
+        initializeStartingPositions();
+    }
 }
