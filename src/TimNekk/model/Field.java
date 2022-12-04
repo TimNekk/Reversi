@@ -8,7 +8,7 @@ import java.util.Set;
 public class Field {
     private final int width = 8;
     private final int height = 8;
-    private CellState[][] cellsStates = new CellState[width][height];
+    private final CellState[][] cellsStates = new CellState[width][height];
     private final CellState[][] previousCellsStates = new CellState[width][height];
 
     public Field() {
@@ -72,8 +72,10 @@ public class Field {
         }
     }
 
-    protected void undo() {
-        cellsStates = previousCellsStates;
+    public void undo() {
+        for (int y = 0; y < height; y++) {
+            System.arraycopy(previousCellsStates[y], 0, cellsStates[y], 0, width);
+        }
     }
 
     public Set<Coordinates> getAvailableCellsCoordinates(Turn turn) {
