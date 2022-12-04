@@ -4,7 +4,7 @@ import TimNekk.controller.MenuController;
 import TimNekk.controller.MovesController;
 import TimNekk.model.Field;
 import TimNekk.model.GameFlow;
-import TimNekk.model.MenuItem;
+import TimNekk.model.enums.MenuItem;
 import TimNekk.model.exceptions.IllegalMoveException;
 import TimNekk.model.exceptions.NoMoreMovesException;
 import TimNekk.view.BoardView;
@@ -13,6 +13,9 @@ import TimNekk.view.ViewConfig;
 
 import java.util.Scanner;
 
+/**
+ * Application that runs the game.
+ */
 public final class Application {
     private GameFlow gameFlow;
 
@@ -22,17 +25,27 @@ public final class Application {
     private MovesController movesController;
     private MenuController menuController;
 
+    /**
+     * Creates a new application.
+     * Initializes the models, views, controllers.
+     */
     public Application() {
         initializeModels();
         initializeViews();
         initializeControllers();
     }
 
+    /**
+     * Initializes the models.
+     */
     private void initializeModels() {
         Field field = new Field();
         gameFlow = new GameFlow(field);
     }
 
+    /**
+     * Initializes the views.
+     */
     private void initializeViews() {
         ViewConfig config = new ViewConfig(
                 "\uD83D\uDD37",
@@ -43,12 +56,18 @@ public final class Application {
         messageView = new MessageView(config, gameFlow);
     }
 
+    /**
+     * Initializes the controllers.
+     */
     private void initializeControllers() {
         Scanner scanner = new Scanner(System.in);
         movesController = new MovesController(scanner, gameFlow);
         menuController = new MenuController(scanner, gameFlow);
     }
 
+    /**
+     * Runs the application.
+     */
     public void run() {
         showMenu();
         MenuItem menuItem = menuController.handlerMenuInput();
@@ -63,11 +82,21 @@ public final class Application {
         }
     }
 
+    /**
+     * Shows the menu.
+     * Prints the menu items.
+     */
     private void showMenu() {
         messageView.printMenu();
         messageView.printMenuPrompt();
     }
 
+    /**
+     * Starts the game.
+     * Prints the board, handles the user input.
+     * Prints the turn info.
+     * Makes the move.
+     */
     private void startGame() {
         while (true) {
             boardView.printField();
@@ -81,6 +110,11 @@ public final class Application {
         }
     }
 
+    /**
+     * Makes the move.
+     * Handles the user input.
+     * Prints the error message if the move is illegal.
+     */
     private void makeMove() throws NoMoreMovesException {
         while (true) {
             try {
@@ -93,6 +127,11 @@ public final class Application {
         }
     }
 
+    /**
+     * Ends the game.
+     * Prints the final score.
+     * Resets the game flow.
+     */
     private void endGame() {
         boardView.printField();
         messageView.printFinalScore();
